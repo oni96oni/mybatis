@@ -41,4 +41,78 @@
    	 WHERE EMPLOYEE_ID BETWEEN #{first} AND #{last}
   </select>
   
+  <insert id="dataInsert1" parameterType="dataVo">
+  	INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.NEXTVAL, #{name}, #{today})
+  </insert>
+  
+  <!-- update id="dataUpdate1" parameterType="map" -->
+  <update id="dataUpdate1" parameterType="dataVo">
+  	UPDATE T_MYBATIS
+  	   SET NAME = #{name}
+  	 WHERE ID = #{id}
+  </update>
+  
+  <delete id="dataDelete1" parameterType="dataVo">
+  	DELETE FROM T_MYBATIS
+  	 WHERE ID = #{id}
+  </delete>
+  
+  <select id="inserCheck" resultType="dataVo">
+  	SELECT * FROM T_MYBATIS
+  	 WHERE ID = #{id}
+  </select>
+  
+  <select id="dynamicQuery" parameterType="empWhereVo" resultType="empVo">
+   SELECT EMPLOYEE_ID
+	 	, FIRST_NAME
+	 	, LAST_NAME
+	 	, SALARY 
+	 FROM EMPLOYEES
+	<trim prefix="WHERE" prefixOverrides="AND">
+		<if test="salary > 0">
+		 	SALARY >= #{salary}
+		</if>
+		<choose>
+			<when test = "deptId > 0" >
+				AND DEPARTMENT_ID = #{deptId}
+			</when>
+			<when test="deptIdList != null">
+				<foreach collection="deptIdList" item="item" index="index" open="AND DEPARTMENT_ID IN (" close=")" separator=", ">
+					#{item}
+				</foreach>
+			</when>
+		</choose>
+		<choose>
+			<when test="startDate != null and endDate != null">
+				AND HIRE_DATE BETWEEN #{startDate} AND #{endDate}
+			</when>
+			<when test="startDate != null and endDate == null">
+				AND HIRE_DATE >= #{startDate}
+			</when>
+			<when test="startDate == null and endDate != null">
+				AND HIRE_DATE &lt;= #{endDate}
+			</when>
+		</choose>
+	</trim>
+  </select>
+  
+  <select id="dynamicQuery2" parameterType="jobCountVo" resultType="empVo">
+   SELECT COUNT(*)
+	 	, JOB_ID
+	 	, DEPARTMENT_ID
+	 FROM EMPLOYEES
+	 <trim prefix="WHERE" prefixOverrides="AND">
+		<choose>
+			<when test = "deptId > 0" >
+				AND DEPARTMENT_ID = #{deptId}
+			</when>
+			<when test="deptIdList != null">
+				<foreach collection="deptIdList" item="item" index="index" open="AND DEPARTMENT_ID IN (" close=")" separator=", ">
+					#{item}
+				</foreach>
+			</when>
+		</choose>
+	</trim>
+  </select>
+ 	  
 </mapper>
