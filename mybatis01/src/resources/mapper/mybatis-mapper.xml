@@ -1,118 +1,140 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
 <mapper namespace="empMapper">
 	<resultMap type="empVo" id="empVoMap">
-		<result property="empId" column="employee_id"/>
-		<result property="firstName" column="first_name"/>
-		<result property="lastName" column="last_name"/>
+		<result property="empId" column="employee_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
 	</resultMap>
 	
-  <select id="empCount" resultType="_int">
-    select COUNT(*) from EMPLOYEES
-  </select>
-  
-  <select id="empNames" resultType="string">
-    select CONCAT(FIRST_NAME, LAST_NAME) from EMPLOYEES
-  </select>
-  
-  <select id="empDatas" resultType="map">
-    select EMPLOYEE_ID, FIRST_NAME, LAST_NAME from EMPLOYEES
-  </select>
-  
-  <select id="empObjects" resultType="empVo">
-    select EMPLOYEE_ID AS empid, FIRST_NAME AS firstname, LAST_NAME AS lastname from EMPLOYEES ORDER BY EMPLOYEE_ID
-  </select>
-  
-  <select id="empSelect" resultType="empVo">
-    select EMPLOYEE_ID AS empid
-    	 , FIRST_NAME AS firstname
-    	 , LAST_NAME AS lastname 
-   	  from EMPLOYEES
-   	 WHERE EMPLOYEE_ID = #{id}
-  </select>
-  
-  <select id="empRange" parameterType="map" resultMap="empVoMap">
-    select EMPLOYEE_ID
-    	 , FIRST_NAME
-    	 , LAST_NAME
-   	  from EMPLOYEES
-   	 WHERE EMPLOYEE_ID BETWEEN #{first} AND #{last}
-  </select>
-  
-  <insert id="dataInsert1" parameterType="dataVo">
-  	INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.NEXTVAL, #{name}, #{today})
-  </insert>
-  
-  <!-- update id="dataUpdate1" parameterType="map" -->
-  <update id="dataUpdate1" parameterType="dataVo">
-  	UPDATE T_MYBATIS
-  	   SET NAME = #{name}
-  	 WHERE ID = #{id}
-  </update>
-  
-  <delete id="dataDelete1" parameterType="dataVo">
-  	DELETE FROM T_MYBATIS
-  	 WHERE ID = #{id}
-  </delete>
-  
-  <select id="inserCheck" resultType="dataVo">
-  	SELECT * FROM T_MYBATIS
-  	 WHERE ID = #{id}
-  </select>
-  
-  <select id="dynamicQuery" parameterType="empWhereVo" resultType="empVo">
-   SELECT EMPLOYEE_ID
-	 	, FIRST_NAME
-	 	, LAST_NAME
-	 	, SALARY 
-	 FROM EMPLOYEES
-	<trim prefix="WHERE" prefixOverrides="AND">
-		<if test="salary > 0">
-		 	SALARY >= #{salary}
-		</if>
-		<choose>
-			<when test = "deptId > 0" >
-				AND DEPARTMENT_ID = #{deptId}
-			</when>
-			<when test="deptIdList != null">
-				<foreach collection="deptIdList" item="item" index="index" open="AND DEPARTMENT_ID IN (" close=")" separator=", ">
-					#{item}
-				</foreach>
-			</when>
-		</choose>
-		<choose>
-			<when test="startDate != null and endDate != null">
-				AND HIRE_DATE BETWEEN #{startDate} AND #{endDate}
-			</when>
-			<when test="startDate != null and endDate == null">
-				AND HIRE_DATE >= #{startDate}
-			</when>
-			<when test="startDate == null and endDate != null">
-				AND HIRE_DATE &lt;= #{endDate}
-			</when>
-		</choose>
-	</trim>
-  </select>
-  
-  <select id="dynamicQuery2" parameterType="jobCountVo" resultType="empVo">
-   SELECT COUNT(*)
-	 	, JOB_ID
-	 	, DEPARTMENT_ID
-	 FROM EMPLOYEES
-	 <trim prefix="WHERE" prefixOverrides="AND">
-		<choose>
-			<when test = "deptId > 0" >
-				AND DEPARTMENT_ID = #{deptId}
-			</when>
-			<when test="deptIdList != null">
-				<foreach collection="deptIdList" item="item" index="index" open="AND DEPARTMENT_ID IN (" close=")" separator=", ">
-					#{item}
-				</foreach>
-			</when>
-		</choose>
-	</trim>
-  </select>
- 	  
+	<select id="empCount" resultType="_int">
+		SELECT COUNT(*) FROM EMPLOYEES
+	</select>
+	
+	<select id="empNames" resultType="string">
+		SELECT CONCAT(FIRST_NAME, LAST_NAME) FROM EMPLOYEES
+	</select>
+	
+	<select id="empDatas" resultType="map">
+		SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME FROM EMPLOYEES
+	</select>
+	
+	<select id="empObjects" resultType="empVo">
+		SELECT EMPLOYEE_ID AS empid
+		     , FIRST_NAME AS firstname
+		     , LAST_NAME AS lastname
+		  FROM EMPLOYEES
+	</select>
+	
+	<select id="empSelect" resultType="empVo">
+		SELECT EMPLOYEE_ID AS empid
+		     , FIRST_NAME AS firstname
+		     , LAST_NAME AS lastname
+		  FROM EMPLOYEES
+		 WHERE EMPLOYEE_ID = #{id}
+	</select>
+	
+	<select id="empRange" parameterType="map" resultMap="empVoMap">
+		SELECT EMPLOYEE_ID
+		     , FIRST_NAME
+		     , LAST_NAME
+		  FROM EMPLOYEES
+		 WHERE EMPLOYEE_ID BETWEEN #{first} AND #{last}
+	</select>
+	
+	<insert id="dataInsert1" parameterType="dataVo">
+		INSERT INTO T_MYBATIS VALUES(SEQ_MYBATIS.NEXTVAL, #{name}, #{today})
+	</insert>
+	
+	<!-- update id="dataUpdate1" parameterType="map" -->
+	<update id="dataUpdate1" parameterType="dataVo">
+		UPDATE T_MYBATIS
+		   SET NAME = #{name}
+		 WHERE ID = #{id}
+	</update>
+	
+	<delete id="dataDelete1">
+		DELETE FROM T_MYBATIS
+		 WHERE ID = #{id}
+	</delete>
+	
+	<select id="insertCheck" resultType="dataVo">
+		SELECT * FROM T_MYBATIS
+		 WHERE ID = #{id}
+	</select>
+	
+	<select id="dynamicQuery" parameterType="empWhereVo" resultType="empVo">
+		SELECT EMPLOYEE_ID
+		     , FIRST_NAME
+		     , LAST_NAME
+		     , SALARY
+		  FROM EMPLOYEES
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="salary > 0">
+				AND SALARY >= #{salary}
+			</if>
+			<choose>
+				<when test="deptId > 0">
+					AND DEPARTMENT_ID = #{deptId}
+				</when>
+				<when test="deptIdList != null">
+					<foreach collection="deptIdList" item="v" index="index"
+						open="AND DEPARTMENT_ID IN (" close=")" separator=", ">
+						#{v}
+					</foreach>
+				</when>
+			</choose>
+			<choose>
+				<when test="startDate != null and endDate != null">
+					AND HIRE_DATE BETWEEN #{startDate} AND #{endDate}
+				</when>
+				<when test="startDate != null and endDate == null">
+					AND HIRE_DATE >= #{startDate}
+				</when>
+				<when test="startDate == null and endDate != null">
+					AND HIRE_DATE &lt;= #{endDate}
+				</when>
+			</choose>
+		</trim>
+	</select>
+	<select id="empOfDeptCount" parameterType="map" resultType="map">
+		SELECT COUNT(*) AS TOTAL
+		     , D.DEPARTMENT_NAME
+		     , D.DEPARTMENT_ID
+		  FROM EMPLOYEES E
+		  JOIN DEPARTMENTS D
+		    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+		<where>
+			<choose>
+				<when test="deptId != null">
+					D.DEPARTMENT_ID = #{deptId}
+				</when>
+				<when test="deptList != null">
+					D.DEPARTMENT_ID IN (
+						<foreach collection="deptList" item="item" separator=",">
+							#{item}
+						</foreach>
+					)
+				</when>
+				<when test="stDeptId != null and edDeptId != null">
+					D.DEPARTMENT_ID BETWEEN #{stDeptId} AND #{edDeptId}
+				</when>
+			</choose>
+		</where>
+		 GROUP BY D.DEPARTMENT_ID, D.DEPARTMENT_NAME
+	</select>
+	
+	<select id="getSeq" resultType="_int">
+		SELECT SEQ_MYBATIS.NEXTVAL FROM DUAL
+	</select>
+	
+	<insert id="insertSeq" parameterType="map">
+		INSERT INTO T_MYBATIS VALUES (#{seq}, #{name}, #{date})
+	</insert>
+	
+	<insert id="insertGetSeq" useGeneratedKeys="true" parameterType="dataVo" keyProperty="id" keyColumn="ID">
+		INSERT INTO T_MYBATIS VALUES (SEQ_MYBATIS.NEXTVAL, #{name}, #{today})
+	</insert>
 </mapper>
