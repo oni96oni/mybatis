@@ -6,7 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/rainb/eclipse-workspace/mybatis-3.5.10/mybatis-3.5.10.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rainb/eclipse-workspace/mybatis-3.5.10/mybatis-3.5.10.jar" sourcepath="C:/Users/rainb/eclipse-workspace/mybatis-3.5.10/mybatis-3.5.10.jar"/>
 	<classpathentry kind="lib" path="C:/Users/rainb/eclipse-workspace/oracle/jar/ojdbc8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
